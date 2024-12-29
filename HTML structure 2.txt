@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Social Media - E-Commerce Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js"></script> <!-- For encryption -->
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client"></script> <!-- For real-time communication -->
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="main-container">
+        
+        <!-- Header Section -->
+        <header>
+            <div class="logo">YourLogo</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#store">Store</a></li>
+                    <li><a href="#payment">Payment</a></li>
+                    <li><a href="#chat">Chat</a></li>
+                    <li><a href="#profile">Profile</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <!-- Main Content Section -->
+        <div class="content">
+            <!-- Left Sidebar (Profile & E-commerce) -->
+            <div class="left-sidebar">
+                <div id="profile-card">
+                    <img src="user-avatar.jpg" alt="User Avatar">
+                    <p>Welcome, User</p>
+                </div>
+                <div id="ecommerce-section">
+                    <h3>Your Cart</h3>
+                    <ul id="cart-items">
+                        <!-- Dynamically filled with cart items -->
+                    </ul>
+                    <button id="checkout-button">Checkout</button>
+                </div>
+            </div>
+            
+            <!-- Main Feed Section (Social Media Post and Video) -->
+            <div class="feed">
+                <section id="create-post">
+                    <textarea id="post-text" placeholder="Share your opinion..."></textarea>
+                    <button id="post-btn">Post</button>
+                    <div class="media-upload">
+                        <input type="file" id="upload-image" accept="image/*">
+                        <input type="file" id="upload-video" accept="video/*">
+                    </div>
+                </section>
+
+                <!-- Posts Display Section -->
+                <section id="posts-display">
+                    <!-- Example of user post with shared image/video -->
+                    <div class="post">
+                        <p>Check out this awesome product!</p>
+                        <img src="product-image.jpg" alt="Product Image">
+                        <video controls>
+                            <source src="product-video.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <button class="like-btn">Like</button>
+                        <button class="comment-btn">Comment</button>
+                        <button class="share-btn">Share</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Sidebar (E-Payment, Encryption & Communication) -->
+            <div class="right-sidebar">
+                <!-- E-Payment System -->
+                <section id="payment">
+                    <h3>Payment</h3>
+                    <button id="add-payment-method">Add Payment Method</button>
+                    <button id="make-payment">Make Payment</button>
+                </section>
+
+                <!-- Encryption Info -->
+                <section id="encryption">
+                    <h3>End-to-End Encryption</h3>
+                    <p>Your messages and calls are encrypted end-to-end for security.</p>
+                </section>
+
+                <!-- Online Conversation & Calls -->
+                <section id="chat">
+                    <h3>Live Chat</h3>
+                    <div id="chat-box">
+                        <!-- Chat messages will be dynamically loaded here -->
+                    </div>
+                    <input type="text" id="message" placeholder="Type a message...">
+                    <button id="send-message">Send</button>
+
+                    <!-- Video/Audio Call -->
+                    <div id="video-audio-call">
+                        <button id="start-call">Start Video Call</button>
+                        <button id="end-call">End Call</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer>
+            <div>© 2024 Your Company. All Rights Reserved.</div>
+        </footer>
+    </div>
+
+    <!-- Scripts for functionality -->
+    <script>
+        // Example for handling file upload and post submission
+        document.getElementById('post-btn').addEventListener('click', () => {
+            const postText = document.getElementById('post-text').value;
+            const image = document.getElementById('upload-image').files[0];
+            const video = document.getElementById('upload-video').files[0];
+
+            if (postText || image || video) {
+                // Implement post submission logic (e.g., send to server)
+                console.log('Post submitted:', postText);
+                // Reset after submission
+                document.getElementById('post-text').value = '';
+                document.getElementById('upload-image').value = '';
+                document.getElementById('upload-video').value = '';
+            }
+        });
+
+        // Real-time chat logic (simplified)
+        const socket = io.connect('http://localhost:3000'); // Your server URL
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('send-message');
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message) {
+                socket.emit('sendMessage', message); // Sending message to server
+                messageInput.value = ''; // Reset after sending
+            }
+        });
+
+        // Audio and Video Call functionality (simplified)
+        document.getElementById('start-call').addEventListener('click', () => {
+            // Implement logic for starting encrypted video/audio call
+            alert('Starting an encrypted video call...');
+        });
+
+        document.getElementById('end-call').addEventListener('click', () => {
+            // End the call
+            alert('Ending the call...');
+        });
+    </script>
+</body>
+</html>

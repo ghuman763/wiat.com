@@ -1,0 +1,161 @@
+// Initialize the DOM elements and event listeners
+document.addEventListener("DOMContentLoaded", function () {
+  // Placeholder variables for the user and posts
+  const userId = 1;
+  const postsContainer = document.getElementById("posts-container");
+  const productContainer = document.getElementById("product-container");
+  const callButton = document.getElementById("call-button");
+
+  // Array to simulate posts (You will get these from a database)
+  let posts = [
+    {
+      id: 1,
+      userId: 1,
+      username: "JohnDoe",
+      content: "This is a post content",
+      media: "image.jpg", // or "video.mp4"
+      likes: 0,
+      comments: [
+        { userId: 2, username: "JaneDoe", text: "Great post!" },
+        { userId: 3, username: "UserThree", text: "I agree!" }
+      ]
+    },
+    // Add more posts here
+  ];
+
+  // Placeholder product data for e-commerce section
+  const products = [
+    {
+      id: 1,
+      name: "T-Shirt",
+      price: 19.99,
+      image: "t-shirt.jpg"
+    },
+    {
+      id: 2,
+      name: "Shoes",
+      price: 49.99,
+      image: "shoes.jpg"
+    },
+    // More products
+  ];
+
+  // Placeholder for video sharing (36 hours limit)
+  const videos = [];
+
+  // Display posts on the page
+  function displayPosts() {
+    postsContainer.innerHTML = "";
+    posts.forEach((post) => {
+      const postElement = document.createElement("div");
+      postElement.classList.add("post");
+      postElement.innerHTML = `
+        <div class="post-header">
+          <span class="username">${post.username}</span>
+        </div>
+        <div class="post-content">
+          ${post.media.includes(".jpg") ? 
+            `<img src="${post.media}" alt="Post Media">` :
+            `<video controls src="${post.media}"></video>`}
+        </div>
+        <div class="post-footer">
+          <button class="like-btn" data-post-id="${post.id}">Like (${post.likes})</button>
+          <button class="comment-btn" data-post-id="${post.id}">Comment</button>
+          <div class="comments-section">
+            ${post.comments.map((comment) => `
+              <div class="comment">
+                <strong>${comment.username}:</strong> ${comment.text}
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+      postsContainer.appendChild(postElement);
+    });
+  }
+
+  // Display products for e-commerce section
+  function displayProducts() {
+    productContainer.innerHTML = "";
+    products.forEach((product) => {
+      const productElement = document.createElement("div");
+      productElement.classList.add("product-card");
+      productElement.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>$${product.price}</p>
+        <button class="add-to-cart-btn" data-product-id="${product.id}">Add to Cart</button>
+      `;
+      productContainer.appendChild(productElement);
+    });
+  }
+
+  // Event listener for the like button
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.classList.contains("like-btn")) {
+      const postId = e.target.getAttribute("data-post-id");
+      const post = posts.find(p => p.id == postId);
+      post.likes++;
+      displayPosts();
+    }
+  });
+
+  // Event listener for the comment button
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.classList.contains("comment-btn")) {
+      const postId = e.target.getAttribute("data-post-id");
+      const commentText = prompt("Enter your comment:");
+      if (commentText) {
+        const post = posts.find(p => p.id == postId);
+        post.comments.push({
+          userId: userId,
+          username: "CurrentUser", // In a real app, this would be dynamic
+          text: commentText
+        });
+        displayPosts();
+      }
+    }
+  });
+
+  // Event listener for the "Add to Cart" button
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.classList.contains("add-to-cart-btn")) {
+      const productId = e.target.getAttribute("data-product-id");
+      const product = products.find(p => p.id == productId);
+      alert(`Added ${product.name} to your cart`);
+    }
+  });
+
+  // Handle video sharing with 36 hours expiration
+  function shareVideo(videoFile) {
+    const expiryTime = 36 * 60 * 60 * 1000; // 36 hours in milliseconds
+    const video = {
+      file: videoFile,
+      uploadTime: Date.now(),
+      expiryTime: Date.now() + expiryTime
+    };
+    videos.push(video);
+    setTimeout(() => {
+      // Remove video after 36 hours
+      const videoIndex = videos.indexOf(video);
+      if (videoIndex > -1) {
+        videos.splice(videoIndex, 1);
+        console.log("Video expired and deleted.");
+      }
+    }, expiryTime);
+  }
+
+  // Simulate the start of a video/audio call
+  function startCall() {
+    alert("Starting an encrypted audio/video call...");
+    // Implement WebRTC or other secure methods here
+  }
+
+  // Event listener for video/audio call
+  callButton.addEventListener("click", startCall);
+
+  // Call display functions
+  displayPosts();
+  displayProducts();
+});
+
